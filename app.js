@@ -1,55 +1,49 @@
 const bcrypt = require('bcrypt');
+const express = require('express');
+const app = express();
+const port = 3030;
 
-const express = require('express')
-const app = express()
-const port = 3020
+app.use(express.json());
 
-let usuarios = [];  
+let usuarios = [];
 let nextId = 1;
 
-async function criar(nome, email, senha) {
-  const hash = await bcrypt.hash(senha, 10);
-  const usuario = {id: nextId++, nome, email, senha: hash};
-  usuarios.push(usuario);
-  return{id: usuario.id, nome, email,};
-}
+app.post('/usuarios', async (req, res) => {
+  const { nome, email, senha } = req.body;
+  const novo = await criar(nome, email, senha);
+  res.status(201).json(novo);
+});
 
-function buscarPorId(id){
-  return usuarios.find(u=>u.id === id);
-}
+app.get('/usuarios', (req, res) => {
+  res.json(listartodos());
+});
 
+app.get('/usuarios/:id', (req, res) => {
+  const usuario = buscarPorId(Number(req.params.id));
+  if (!usuario) return res.status(404).json({ erro: 'Não encontrado' });
+  const { senha, ...semSenha } = usuario;
+  res.json(semSenha);
+});
 
-async function atualizar(id, dados) {
-  const index = usuarios.findIndex(u => u.id === id);
-  if(index === -1){
-    return null;
-  }  
-  if(dados.senha){
-    dados.senha = await bcrypt.hash(dados.senha, 10);
-  }
-  usuarios[index] = {...usuarios[index], ...dados};
-  const {senha, ...semSenha} = usuarios[index];
-  return semSenha;
-}
+app.put('/usuarios/:id', async (req, res) => {
+  const atualizado = await atualizar(Number(req.params.id), req.body);
+  if (!atualizado) return res.status(404).json({ erro: 'Não encontrado' });
+  res.json(atualizado);
+});
 
-function deletar(id){
-  const index = usuarios.findIndex(u=>u.id === id);
-  if(index === -1){
-    return false;
-  }
-  usuarios.splice(index, 1);
-  return true;
-}
+app.delete('/usuarios/:id', (req, res) => {
+  const ok = deletar(Number(req.params.id));
+  if (!ok) return res.status(404).json({ erro: 'Não encontrado' });
+  res.status(204).send();
+});
 
-async function login(email, senha) {
-  const usuario = usuarios.find(u => u.email === email);
-  if(!usuario){
-    return null;
-  } 
-  const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
-  if(!senhaCorreta){
-    return null;
-  }
-  const {senha: _, ...semSenha} = usuario;
-  return semSenha;
-}
+app.post('/login', async (req, res) => {
+  const { email, senha } = req.body;
+  const usuario = await login(email, senha);
+  if (!usuario) return res.status(401).json({ erro: 'Credenciais inválidas' });
+  res.json(usuario);
+});
+
+app.listen(port, () => {
+  console.log(`Servidor rodando ${port}`);
+});
