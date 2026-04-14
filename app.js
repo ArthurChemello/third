@@ -4,13 +4,13 @@ const express = require('express')
 const app = express()
 const port = 3020
 
-let usuarios = [];
+let usuarios = [];  
 let nextId = 1;
 
 async function criar(nome, email, senha) {
   const hash = await bcrypt.hash(senha, 10);
   const usuario = {id: nextId++, nome, email, senha: hash};
-  usuariosn.push(usuario);
+  usuarios.push(usuario);
   return{id: usuario.id, nome, email,};
 }
 
