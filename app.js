@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3030;
 
-const { criar, listartodos, buscarPorId, atualizar, deletar, login } = require('./crud');
+const { criar, listartodos, buscarPorId, atualizar, deletar, login } = require('./Anterior/crudUsuario');
 
 app.use(express.json());
 
@@ -45,3 +45,5 @@ app.post('/login', async (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
+
+//Model-Service-Controller

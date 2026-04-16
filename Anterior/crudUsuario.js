@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 
 let usuarios = [];  
-let nextId = 1;
+let nextId = 1; 
 
 async function criar(nome, email, senha) {
   const hash = await bcrypt.hash(senha, 10);
