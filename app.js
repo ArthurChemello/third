@@ -2,48 +2,24 @@ const express = require('express');
 const app = express();
 const port = 3030;
 
-const { criar, listartodos, buscarPorId, atualizar, deletar, login } = require('./Anterior/crudUsuario');
+const usuarioController = require('./controllers/usuarioController');
+const filmeController = require('./controllers/filmeController');
 
 app.use(express.json());
 
-app.post('/usuarios', async (req, res) => {
-  const {nome, email, senha} = req.body;
-  const novo = await criar(nome, email, senha);
-  res.status(201).json(novo);
-});
+app.post('/usuarios', usuarioController.criar);
+app.get('/usuarios', usuarioController.listartodos);
+app.get('/usuarios/:id', usuarioController.buscarPorId);
+app.put('/usuarios/:id', usuarioController.atualizar);
+app.delete('/usuarios/:id', usuarioController.deletar);
+app.post('/login', usuarioController.login);
 
-app.get('/usuarios', (req, res) => {
-  res.json(listartodos());
-});
-
-app.get('/usuarios/:id', (req, res) => {
-  const usuario = buscarPorId(Number(req.params.id));
-  if (!usuario) return res.status(404).json({erro: 'Não encontrado'});
-  const {senha, ...semSenha} = usuario;
-  res.json(semSenha);
-});
-
-app.put('/usuarios/:id', async (req, res) => {
-  const atualizado = await atualizar(Number(req.params.id), req.body);
-  if (!atualizado) return res.status(404).json({erro: 'Não encontrado'});
-  res.json(atualizado);
-});
-
-app.delete('/usuarios/:id', (req, res) => {
-  const ok = deletar(Number(req.params.id));
-  if (!ok) return res.status(404).json({erro: 'Não encontrado'});
-  res.status(204).send();
-});
-
-app.post('/login', async (req, res) => {
-  const {email, senha} = req.body;
-  const usuario = await login(email, senha);
-  if (!usuario) return res.status(401).json({erro: 'Credenciais inválidas'});
-  res.json(usuario);
-});
+app.post('/filmes', filmeController.criar);
+app.get('/filmes', filmeController.listarTodos);
+app.get('/filmes/:id', filmeController.buscarPorId);
+app.put('/filmes/:id', filmeController.atualizar);
+app.delete('/filmes/:id', filmeController.deletar);
 
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
-
-//Model-Service-Controller
