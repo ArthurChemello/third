@@ -1,32 +1,32 @@
-const filmeModel = require('../models/filmeModel');
-const usuarioModel = require('../models/usuarioModel');
+const Filmemodel = require('../models/usuariomodel');
+const usuariomodel = require('../models/usuariomodel');
 
 function criar(titulo, ano, genero, usuarioId) {
-  const usuario = usuarioModel.buscarPorId(usuarioId);
+  const usuario = usuariomodel.buscarPorId(usuarioId);
   if (!usuario) return null;
-  const filme = {id: filmeModel.gerarId(), titulo, ano, genero, usuarioId};
-  filmeModel.salvar(filme);
+  const filme = {id: Filmemodel.gerarId(), titulo, ano, genero, usuarioId};
+  Filmemodel.salvar(filme);
   return filme;
 }
 
 function listarTodos() {
-  return filmeModel.buscarTodos();
+  return Filmemodel.buscarTodos();
 }
 
 function buscarPorId(id) {
-  return filmeModel.buscarPorId(id);
+  return Filmemodel.buscarPorId(id);
 }
 
 function atualizar(id, dados) {
-  const index = filmeModel.buscarIndex(id);
+  const index = Filmemodel.buscarIndex(id);
   if (index === -1) return null;
-  return filmeModel.atualizar(index, dados);
+  return Filmemodel.atualizar(index, dados);
 }
 
 function deletar(id) {
-  const index = filmeModel.buscarIndex(id);
+  const index = Filmemodel.buscarIndex(id);
   if (index === -1) return false;
-  filmeModel.deletar(index);
+  Filmemodel.deletar(index);
   return true;
 }
 

@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 const port = 3030;
 
-const usuarioController = require('./controllers/usuarioController');
-const filmeController = require('./controllers/filmeController');
+const usuarioController = require('./controllers/usuariocontroller');
+const filmeController = require('./controllers/filmecontroller');
 
 app.use(express.json());
 
@@ -19,6 +19,10 @@ app.get('/filmes', filmeController.listarTodos);
 app.get('/filmes/:id', filmeController.buscarPorId);
 app.put('/filmes/:id', filmeController.atualizar);
 app.delete('/filmes/:id', filmeController.deletar);
+
+app.get('/', (req, res) => {
+  res.json({ mensagem: 'API funcionando!' });
+});
 
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);

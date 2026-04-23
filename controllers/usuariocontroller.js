@@ -1,4 +1,4 @@
-const service = require('../services/usuarioService');
+const service = require('../services/usuarioservice');
 
 async function criar(req, res) {
   const {nome, email, senha} = req.body;

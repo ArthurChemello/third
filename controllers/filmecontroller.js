@@ -1,4 +1,4 @@
-const service = require('../services/filmeService');
+const service = require('../services/filmeservice');
 
 function criar(req, res) {
   const {titulo, ano, genero, usuarioId} = req.body;

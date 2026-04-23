@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
-const port = 3030;
+const port = 3020;
 
-const { criar, listartodos, buscarPorId, atualizar, deletar, login } = require('./crudusuario');
-const { criarFilme, listarFilmes, buscarFilmePorId, atualizarFilme, deletarFilme } = require('./crudfilme');
+const { criar, listartodos, buscarPorId, atualizar, deletar, login } = require('./crudUsuario');
+const { criarFilme, listarFilmes, buscarFilmePorId, atualizarFilme, deletarFilme } = require('./crudFilme');
 
 app.use(express.json());
 
