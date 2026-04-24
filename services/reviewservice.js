@@ -1,32 +1,34 @@
-const filmemodel = require('../models/reviewmodel');
-const usuariomodel = require('../models/filmemodel');
+const reviewmodel = require('../models/reviewmodel');
+const filmemodel = require('../models/filmemodel');
 
-function criar(titulo, ano, genero, usuarioId) {
-  const usuario = usuarioModel.buscarPorId(usuarioId);
-  if (!usuario) return null;
-  const filme = {id: filmeModel.gerarId(), titulo, ano, genero, usuarioId};
-  filmeModel.salvar(filme);
-  return filme;
+function criar(filmeId, nota, comentario, usuarioId) {
+  const filme = filmemodel.buscarPorId(Number(filmeId));
+  if (!filme){
+    return null;
+  } 
+  const review = {id: reviewmodel.gerarId(), filmeId, nota, comentario, usuarioId};
+  reviewmodel.salvar(review);
+  return review;
 }
 
 function listarTodos() {
-  return filmeModel.buscarTodos();
+  return reviewmodel.buscarTodos();
 }
 
 function buscarPorId(id) {
-  return filmeModel.buscarPorId(id);
+  return reviewmodel.buscarPorId(id);
 }
 
 function atualizar(id, dados) {
-  const index = filmeModel.buscarIndex(id);
+  const index = reviewmodel.buscarIndex(id);
   if (index === -1) return null;
-  return filmeModel.atualizar(index, dados);
+  return reviewmodel.atualizar(index, dados);
 }
 
 function deletar(id) {
-  const index = filmeModel.buscarIndex(id);
+  const index = reviewmodel.buscarIndex(id);
   if (index === -1) return false;
-  filmeModel.deletar(index);
+  reviewmodel.deletar(index);
   return true;
 }
 
