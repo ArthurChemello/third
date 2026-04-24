@@ -1,55 +1,14 @@
-const bcrypt = require('bcrypt');
+require('dotenv').config();
 
-const express = require('express')
-const app = express()
-const port = 3020
+const express = require('express');
+const app = express();
 
-let usuarios = [];  
-let nextId = 1;
+app.use(express.json());
 
-async function criar(nome, email, senha) {
-  const hash = await bcrypt.hash(senha, 10);
-  const usuario = {id: nextId++, nome, email, senha: hash};
-  usuarios.push(usuario);
-  return{id: usuario.id, nome, email,};
-}
+app.use('/usuarios', require('./routes/usuarioRoutes'));
+app.use('/filmes',   require('./routes/filmeRoutes'));
+app.use('/reviews',  require('./routes/reviewRoutes'));
 
-function buscarPorId(id){
-  return usuarios.find(u=>u.id === id);
-}
-
-
-async function atualizar(id, dados) {
-  const index = usuarios.findIndex(u => u.id === id);
-  if(index === -1){
-    return null;
-  }  
-  if(dados.senha){
-    dados.senha = await bcrypt.hash(dados.senha, 10);
-  }
-  usuarios[index] = {...usuarios[index], ...dados};
-  const {senha, ...semSenha} = usuarios[index];
-  return semSenha;
-}
-
-function deletar(id){
-  const index = usuarios.findIndex(u=>u.id === id);
-  if(index === -1){
-    return false;
-  }
-  usuarios.splice(index, 1);
-  return true;
-}
-
-async function login(email, senha) {
-  const usuario = usuarios.find(u => u.email === email);
-  if(!usuario){
-    return null;
-  } 
-  const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
-  if(!senhaCorreta){
-    return null;
-  }
-  const {senha: _, ...semSenha} = usuario;
-  return semSenha;
-}
+app.listen(process.env.PORT, () => {
+  console.log(`Servidor rodando na porta ${port}`);
+});
