@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const model = require('../models/usuariomodel');
+const JWT_SECRET = process.env.JWT_SECRET;
 
 async function criar(nome, email, senha) {
   const hash = await bcrypt.hash(senha, 10);
@@ -39,8 +40,13 @@ async function login(email, senha) {
   if (!usuario) return null;
   const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
   if (!senhaCorreta) return null;
-  const {senha: _, ...semSenha} = usuario;
-  return semSenha;
+
+ const token = jwt.sign(//é a biblioteca que cria e valida os tokens JWT no Node.js.
+    { id: usuario.id, email: usuario.email, role: usuario.role },
+    'segredo123',
+    { expiresIn: '7d' }// medida de segurança gera um novo
+  );
+  return { token };
 }
 
 module.exports = { criar, listartodos, buscarPorId, atualizar, deletar, login };

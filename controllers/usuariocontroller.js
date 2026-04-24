@@ -12,27 +12,35 @@ function listartodos(req, res) {
 
 function buscarPorId(req, res) {
   const usuario = service.buscarPorId(Number(req.params.id));
-  if (!usuario) return res.status(404).json({erro: 'Não encontrado'});
+  if (!usuario){
+    return res.status(404).json({erro: 'Não encontrado'});
+  } 
   const {senha, ...semSenha} = usuario;
   res.json(semSenha);
 }
 
 async function atualizar(req, res) {
   const atualizado = await service.atualizar(Number(req.params.id), req.body);
-  if (!atualizado) return res.status(404).json({erro: 'Não encontrado'});
+  if (!atualizado){
+    return res.status(404).json({erro: 'Não encontrado'});
+  } 
   res.json(atualizado);
 }
 
 function deletar(req, res) {
   const ok = service.deletar(Number(req.params.id));
-  if (!ok) return res.status(404).json({erro: 'Não encontrado'});
+  if (!ok){
+    return res.status(404).json({erro: 'Não encontrado'});
+  } 
   res.status(204).send();
 }
 
 async function login(req, res) {
   const {email, senha} = req.body;
   const usuario = await service.login(email, senha);
-  if (!usuario) return res.status(401).json({erro: 'Credenciais inválidas'});
+  if (!usuario){
+    return res.status(401).json({erro: 'Credenciais inválidas'});
+  }
   res.json(usuario);
 }
 
